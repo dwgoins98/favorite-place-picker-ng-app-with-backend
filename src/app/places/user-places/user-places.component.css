@@ -1,3 +1,20 @@
 .fallback-text {
   text-align: center;
 }
+
+@keyframes dots {
+  0% { content: ""; }
+  33% { content: "."; }
+  66% { content: ".."; }
+  100% { content: "..."; }
+}
+
+.loading {
+  font-size: 24px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.dots::after {
+  content: "";
+  animation: dots 1s infinite steps(4);
+}

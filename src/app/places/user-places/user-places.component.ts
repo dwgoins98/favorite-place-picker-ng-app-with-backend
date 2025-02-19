@@ -1,13 +1,97 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 import { PlacesContainerComponent } from '../places-container/places-container.component';
 import { PlacesComponent } from '../places.component';
+import { Place } from '../place.model';
+import { PlacesService } from '../places.service';
 
 @Component({
-    selector: 'app-user-places',
-    templateUrl: './user-places.component.html',
-    styleUrl: './user-places.component.css',
-    imports: [PlacesContainerComponent, PlacesComponent]
+  selector: 'app-user-places',
+  templateUrl: './user-places.component.html',
+  styleUrl: './user-places.component.css',
+  imports: [PlacesContainerComponent, PlacesComponent],
 })
-export class UserPlacesComponent {
+export class UserPlacesComponent implements OnInit {
+  /**
+   * Signal to hold the list of places.
+   */
+  places = signal<Place[] | undefined>(undefined);
+
+  /**
+   * Signal to indicate if data is being fetched.
+   */
+  isFetching = signal<boolean>(false);
+
+  /**
+   * Signal to hold any error messages.
+   */
+  error = signal<string>('');
+
+  /**
+   * Constructor to inject HttpClient and DestroyRef services.
+   *
+   * @param destroyRef - The DestroyRef service for handling component destruction.
+   * @param placesService - The PlacesService for fetching user places from the backend.
+   */
+  constructor(
+    private destroyRef: DestroyRef,
+    private placesService: PlacesService
+  ) {}
+
+  /**
+   * Initializes the component by setting the fetching state to true and subscribing to the observable
+   * that fetches user places from the backend. The fetched places are set to the places state,
+   * and the fetching state is set to false upon completion. If an error occurs, the error state is set
+   * with the error message. The subscription is cleaned up when the component is destroyed.
+   *
+   * @returns void
+   *
+   */
+  ngOnInit() {
+    /**
+     * Sets the fetching state to true.
+     */
+    this.isFetching.set(true);
+
+    /**
+     * HTTP GET request to fetch available places from the backend.
+     * @returns Observable<Place[]>
+     */
+    const placesSubsc = this.placesService.loadUserPlaces().subscribe({
+      /**
+       * Handles the next value emitted by the observable.
+       * Sets the places state with the fetched places.
+       * @param places - The array of places fetched from the backend.
+       */
+      next: (places) => {
+        this.places.set(places);
+      },
+
+      /**
+       * Handles the completion of the observable.
+       * Sets the fetching state to false.
+       */
+      complete: () => {
+        this.isFetching.set(false);
+      },
+
+      /**
+       * Handles any errors emitted by the observable.
+       * Sets the error state with the error message.
+       * @param err - The error emitted by the observable.
+       */
+      error: (err: Error) => {
+        this.error.set(err.message);
+      },
+    });
+
+    /**
+     * Unsubscribes from the placesSubsc observable when the component is destroyed.
+     */
+    this.destroyRef.onDestroy(() => {
+      placesSubsc.unsubscribe();
+    });
+  }
 }
