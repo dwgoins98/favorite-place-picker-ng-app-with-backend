@@ -23,7 +23,7 @@
   } @if (error()) {
   <p class="fallback-text">{{ error() }}</p>
 
-  } @if (places().length === 0) {
+  } @if (places().length === 0 && !isFetching()) {
   <p class="fallback-text">
     There are no favorited places! Click one to add it to Favorites
   </p>
