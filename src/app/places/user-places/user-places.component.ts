@@ -51,7 +51,7 @@ export class UserPlacesComponent implements OnInit {
       });
 
     /**
-     * Unsubscribes from the selectedPlaceSubsc observable when the component is destroyed.
+     * Unsubscribes from the removedPlaceSubsc observable when the component is destroyed.
      */
     this.destroyRef.onDestroy(() => {
       removedPlaceSubsc.unsubscribe();

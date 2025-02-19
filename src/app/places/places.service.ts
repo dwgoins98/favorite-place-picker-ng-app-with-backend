@@ -9,7 +9,10 @@ import { ErrorService } from '../shared/error.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  constructor(private httpClient: HttpClient, private errorService: ErrorService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private errorService: ErrorService
+  ) {}
 
   private userPlaces = signal<Place[]>([]);
 
@@ -82,7 +85,9 @@ export class PlacesService {
       .pipe(
         catchError((error) => {
           this.userPlaces.set(oldPlaces);
-          this.errorService.showError('Failed to push this place to the user places.');
+          this.errorService.showError(
+            'Failed to push this place to the user places.'
+          );
           return throwError(
             () => new Error('Failed to push this place to the user places.')
           );
@@ -91,18 +96,31 @@ export class PlacesService {
   }
 
   removeUserPlace(place: Place) {
+    const oldPlaces = this.userPlaces();
+
+    if (oldPlaces.some((p) => p.id === place.id)) {
+      this.userPlaces.set(oldPlaces.filter((p) => p.id !== place.id));
+    } else {
+      return throwError(
+        () =>
+          new Error('This place is already removed from your favorite places.')
+      );
+    }
 
     return this.httpClient
       .delete('http://localhost:3000/user-places/' + place.id)
       .pipe(
         catchError((error) => {
-          this.errorService.showError('Failed to remove this place to the user places.');
+          this.userPlaces.set(oldPlaces);
+          this.errorService.showError(
+            'Failed to remove this place from the user places.'
+          );
           return throwError(
-            () => new Error('Failed to remove this place to the user places.')
+            () =>
+              new Error('Failed to remove this place remove the user places.')
           );
         })
       );
-
   }
 
   private fetchPlaces(url: string, errorMessage: string) {

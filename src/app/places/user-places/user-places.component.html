@@ -1,14 +1,15 @@
 <app-places-container title="Your Favorite Places">
   @if (isFetching() && !error()) {
-    <p class="fallback-text">Getting your favorite places<span class="dots"></span></p>
-  }
+  <p class="fallback-text">
+    Getting your favorite places<span class="dots"></span>
+  </p>
 
-  @if (error()) {
-    <p class="fallback-text"> {{ error() }} </p>
-  }
+  } @if (error()) {
+  <p class="fallback-text">{{ error() }}</p>
 
-  @if (places()) {
-  <app-places [places]="places()!" (selectPlace)="onRemovePlace($event)"/>
-  } @else if (places()?.length === 0) {
-  <p class="fallback-text">Unfortunately, no places could be found.</p>
-  }</app-places-container>
+  } @if (places().length === 0) {
+  <p class="fallback-text">There are no favorited places! Click one to add it to Favorites</p>
+  } @else if (places()) {
+  <app-places [places]="places()!" (selectPlace)="onRemovePlace($event)" />
+  }</app-places-container
+>
