@@ -41,6 +41,24 @@ export class UserPlacesComponent implements OnInit {
     private placesService: PlacesService
   ) {}
 
+  onRemovePlace(selectedPlace: Place) {
+    const removedPlaceSubsc = this.placesService
+      .removeUserPlace(
+        selectedPlace,
+      )
+      .subscribe({
+        next: (responseData) => console.log(responseData),
+      });
+
+    /**
+     * Unsubscribes from the selectedPlaceSubsc observable when the component is destroyed.
+     */
+    this.destroyRef.onDestroy(() => {
+      removedPlaceSubsc.unsubscribe();
+    });
+  } 
+
+
   /**
    * Initializes the component by setting the fetching state to true and subscribing to the observable
    * that fetches user places from the backend. The fetched places are set to the places state,

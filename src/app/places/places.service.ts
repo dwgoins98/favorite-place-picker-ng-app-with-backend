@@ -90,7 +90,20 @@ export class PlacesService {
       );
   }
 
-  removeUserPlace(place: Place) {}
+  removeUserPlace(place: Place) {
+
+    return this.httpClient
+      .delete('http://localhost:3000/user-places/' + place.id)
+      .pipe(
+        catchError((error) => {
+          this.errorService.showError('Failed to remove this place to the user places.');
+          return throwError(
+            () => new Error('Failed to remove this place to the user places.')
+          );
+        })
+      );
+
+  }
 
   private fetchPlaces(url: string, errorMessage: string) {
     return this.httpClient.get<{ places: Place[] }>(url).pipe(
