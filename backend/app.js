@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 
 import bodyParser from "body-parser";
 import express from "express";
+import { error } from "node:console";
 
 const app = express();
 
@@ -19,7 +20,12 @@ app.use((req, res, next) => {
 });
 
 app.get("/places", async (req, res) => {
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  /**
+   * Simulating an error to test the error handling
+   */
+  // return res.status(200).json();
 
   const fileContent = await fs.readFile("./data/places.json");
 
