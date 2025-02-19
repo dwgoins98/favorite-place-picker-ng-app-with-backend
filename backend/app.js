@@ -25,7 +25,7 @@ app.get("/places", async (req, res) => {
   /**
    * Simulating an error to test the error handling
    */
-  // return res.status(200).json();
+  //  return res.status(200).json();
 
   const fileContent = await fs.readFile("./data/places.json");
 
@@ -46,6 +46,11 @@ app.get("/user-places", async (req, res) => {
 
 app.put("/user-places", async (req, res) => {
   const placeId = req.body.placeId;
+
+    /**
+   * Simulating an error to test the App-wide error management with error-modal
+   */
+  // return res.status(500).json();
 
   const fileContent = await fs.readFile("./data/places.json");
   const placesData = JSON.parse(fileContent);
