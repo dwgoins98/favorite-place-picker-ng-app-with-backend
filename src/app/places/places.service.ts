@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 
 import { Place } from './place.model';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, throwError } from 'rxjs';
+import { catchError, map, pipe, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,17 +21,71 @@ export class PlacesService {
     );
   }
 
+  /**
+   * Loads the user's favorite places from the backend.
+   *
+   * This method fetches the user's favorite places from the specified endpoint
+   * and updates the internal state with the fetched places.
+   *
+   * @returns An observable that emits the array of user places.
+   *
+   * @remarks
+   * If the fetch operation fails, an error message is provided.
+   *
+   * @example
+   * ```typescript
+   * this.placesService.loadUserPlaces().subscribe({
+   *   next: (places) => {
+   *     console.log('User places loaded:', places);
+   *   },
+   *   error: (err) => {
+   *     console.error('Failed to load user places:', err);
+   *   }
+   * });
+   * ```
+   */
   loadUserPlaces() {
     return this.fetchPlaces(
       'http://localhost:3000/user-places',
       'Could not get your favorite places. Please try again later.'
+    ).pipe(
+      tap({
+        /**
+         * Handles the next value emitted by the observable.
+         * Sets the places state with the fetched places.
+         * Updates the userPlaces signal with the fetched places.
+         * @param userPlaces - The array of places fetched from the backend.
+         */
+        next: (userPlaces) => {
+          this.userPlaces.set(userPlaces);
+        },
+      })
     );
   }
 
-  addPlaceToUserPlaces(placeId: string, url: string) {
-    return this.httpClient.put(url, {
-      placeId,
-    });
+  addPlaceToUserPlaces(place: Place) {
+    const oldPlaces = this.userPlaces();
+
+    if (!oldPlaces.some((p) => p.id === place.id)) {
+      this.userPlaces.set([...oldPlaces, place]);
+    } else {
+      return throwError(
+        () => new Error('This place is already in your favorite places.')
+      );
+    }
+
+    return this.httpClient
+      .put('http://localhost:3000/user-places', {
+        placeId: place.id,
+      })
+      .pipe(
+        catchError((error) => {
+          this.userPlaces.set(oldPlaces);
+          return throwError(
+            () => new Error('Failed to push this place to the user places.')
+          );
+        })
+      );
   }
 
   removeUserPlace(place: Place) {}

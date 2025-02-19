@@ -14,10 +14,11 @@ import { PlacesService } from '../places.service';
   imports: [PlacesContainerComponent, PlacesComponent],
 })
 export class UserPlacesComponent implements OnInit {
-  /**
-   * Signal to hold the list of places.
-   */
-  places = signal<Place[] | undefined>(undefined);
+/**
+ * A list of places loaded for the user.
+ * This property is populated by the `placesService` with the user's favorite places.
+ */
+  places = this.placesService.loadedUserPlaces;
 
   /**
    * Signal to indicate if data is being fetched.
@@ -60,15 +61,6 @@ export class UserPlacesComponent implements OnInit {
      * @returns Observable<Place[]>
      */
     const placesSubsc = this.placesService.loadUserPlaces().subscribe({
-      /**
-       * Handles the next value emitted by the observable.
-       * Sets the places state with the fetched places.
-       * @param places - The array of places fetched from the backend.
-       */
-      next: (places) => {
-        this.places.set(places);
-      },
-
       /**
        * Handles the completion of the observable.
        * Sets the fetching state to false.

@@ -116,8 +116,7 @@ export class AvailablePlacesComponent implements OnInit {
   onSelectPlace(selectedPlace: Place) {
     const selectedPlaceSubsc = this.placesService
       .addPlaceToUserPlaces(
-        selectedPlace.id,
-        'http://localhost:3000/user-places'
+        selectedPlace,
       )
       .subscribe({
         next: (responseData) => console.log(responseData),
