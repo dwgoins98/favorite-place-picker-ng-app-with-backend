@@ -1,5 +1,21 @@
+<!--
+
+  This is the main component template for the PlacePicker application.
+
+  Components:
+  - <app-error-modal>: Displays an error modal with a title and message if an error occurs.
+  - <header>: Contains the logo, title, and description of the application.
+  - <main>: Contains the available places and user places components.
+
+  Elements:
+  - <img>: Displays the logo image.
+  - <h1>: Displays the title of the application.
+  - <p>: Provides a brief description of the application's purpose.
+  - <app-available-places>: Displays the list of available places.
+  - <app-user-places>: Displays the list of places added by the user.
+-->
 @if (error()) {
-  <app-error-modal title="Uh oh!" [message]="error()"/>
+<app-error-modal title="Uh oh!" [message]="error()" />
 }
 
 <header>

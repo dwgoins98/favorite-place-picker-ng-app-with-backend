@@ -1,3 +1,19 @@
+<!--
+  This component displays the user's favorite places within an <app-places-container>.
+
+  - If the data is being fetched and there is no error, it shows a loading message with a spinner.
+  - If there is an error, it displays the error message.
+  - If there are no favorite places, it shows a message indicating that there are no favorited places.
+  - If there are favorite places, it displays them using the <app-places> component and allows the user to remove a place by emitting the 'selectPlace' event.
+
+  @component UserPlacesComponent
+  @input title: The title of the places container.
+  @input isFetching: A function that returns a boolean indicating if the data is being fetched.
+  @input error: A function that returns an error message if there is an error.
+  @input places: A function that returns an array of favorite places.
+  @output onRemovePlace: An event emitted when a place is removed from favorites.
+-->
+  
 <app-places-container title="Your Favorite Places">
   @if (isFetching() && !error()) {
   <p class="fallback-text">
@@ -8,7 +24,9 @@
   <p class="fallback-text">{{ error() }}</p>
 
   } @if (places().length === 0) {
-  <p class="fallback-text">There are no favorited places! Click one to add it to Favorites</p>
+  <p class="fallback-text">
+    There are no favorited places! Click one to add it to Favorites
+  </p>
   } @else if (places()) {
   <app-places [places]="places()!" (selectPlace)="onRemovePlace($event)" />
   }</app-places-container

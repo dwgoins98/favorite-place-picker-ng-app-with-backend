@@ -2,6 +2,9 @@ import { Component, input, output } from '@angular/core';
 
 import { Place } from './place.model';
 
+/**
+ * Component responsible for displaying and selecting places.
+ */
 @Component({
     selector: 'app-places',
     imports: [],

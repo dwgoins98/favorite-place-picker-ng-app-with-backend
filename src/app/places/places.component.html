@@ -1,3 +1,15 @@
+<!--
+
+  This component displays a list of places. Each place is rendered as a list item with an image and title.
+  - The `places` method is called to get the list of places.
+  - The `track place.id` is used for Angular's trackBy function to optimize rendering.
+  - Each place is displayed with an image and title inside a button.
+  - Clicking the button triggers the `onSelectPlace(place)` method.
+
+  Attributes:
+  - [src]: Binds the image source URL dynamically.
+  - [alt]: Binds the image alt text dynamically.
+-->
 <ul>
   @for (place of places(); track place.id) {
     <li class="place-item">

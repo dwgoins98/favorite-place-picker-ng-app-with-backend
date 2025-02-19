@@ -41,6 +41,16 @@ export class UserPlacesComponent implements OnInit {
     private placesService: PlacesService
   ) {}
 
+/**
+ * Removes a selected place from the user's list of places.
+ * 
+ * This method calls the `removeUserPlace` method from the `placesService` to remove the specified place.
+ * It subscribes to the observable returned by the service and logs the response data.
+ * 
+ * The subscription is automatically unsubscribed when the component is destroyed to prevent memory leaks.
+ * 
+ * @param selectedPlace - The place to be removed.
+ */
   onRemovePlace(selectedPlace: Place) {
     const removedPlaceSubsc = this.placesService
       .removeUserPlace(

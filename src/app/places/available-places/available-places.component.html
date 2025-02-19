@@ -1,3 +1,26 @@
+<!-- 
+  This is the template for the Available Places component in an Angular application.
+  It uses the <app-places-container> component to display a list of available places.
+
+  - If the data is being fetched and there is no error, it displays a loading message.
+  - If there is an error, it displays the error message.
+  - If there are places available, it displays the places using the <app-places> component.
+  - If there are no places available, it displays a message indicating that no places could be found.
+
+  Attributes:
+  - title: The title of the places container.
+
+  Bindings:
+  - [places]: Binds the places data to the <app-places> component.
+  - (selectPlace): Event binding for selecting a place.
+
+  Methods:
+  - isFetching(): Checks if the data is being fetched.
+  - error(): Retrieves any error messages.
+  - places(): Retrieves the list of available places.
+  - onSelectPlace(event): Handles the event when a place is selected.
+-->
+  
 <app-places-container title="Available Places">
 
   @if (isFetching() && !error()) {
